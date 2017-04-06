@@ -24,8 +24,26 @@ Dogs vs. Cats最早来源于Kaggle的一个竞赛。现在已经演变为流行�
 
 训练数据包含25,000张猫和狗的图片，每张图片的文件名标示了这是猫还是狗。测试数据包含12,500张猫和狗的图片。
 
+数据集包含两个文件夹train和test：
+
+- train文件夹中文件名为[dog|cat].n.jpg，文件名标示了样本为dog和cat。
+- test文件文件名为n.log，没有样本的类别信息。
+
+dog.2.jpg
+
+![Alt Image Text](data/train/dog.2.jpg)
+
+cat.5.jpg
+
+![Alt Image Text](data/train/cat.5.jpg)
+
+数据集中图片的分辨率，清晰度等规格都有所不同，需要考虑数据集的预处理。
+
 另外还有一个数据集[The Oxford-IIIT Pet Dataset](http://www.robots.ox.ac.uk/%7Evgg/data/pets/)，可以作为训练数据的补充。
 
+- 这个数据集中有37种宠物类别的图片，在这个项目中，只考虑使用其中的Dog和Cat类别的数据
+- 每个类别大概有200张图片
+- 这些图片的分辨率，拍摄角度和光照等都有很大差异
 
 ### Solution Statement
 
@@ -57,7 +75,7 @@ Golle, Philippe构建了一个SVM分类器。在Asirra CAPTCHA上识别猫和狗
 项目首先是预处理图片数据，以方便模型训练和结果验证。然后构建多个深度学习模型（AlexNet，Inception等）。使用训练数据训练各个模型。在测试数据上验证模型的精确度；对比各个模型的效果。最后迭代修改模型，尽可能地提高模型精确度。
 
 #### 数据预处理
-- 处理图片数据，调整图片为统一的大小，并保存为W x H x 3的多维数据，方便后续使用。
+- 处理图片数据，调整图片为统一的大小，并保存为H x W x 3的多维数据，方便后续使用。
 
 #### 模型构建
 - 参考AlexNet，Inception V4，使用keras构建CNN深度神经网络模型分类器
