@@ -2,8 +2,8 @@ from keras.layers import *
 from keras.models import Model
 from keras.optimizers import SGD
 
-train_features = np.load("train_features.npy")
-train_labels = np.load("train_labels.npy")
+train_features = np.load("train_features.npy", mmap_mode='r+')
+train_labels = np.load("train_labels.npy", mmap_mode='r+')
 
 FEATURE_SIZE = 7 * 7 * 512
 
