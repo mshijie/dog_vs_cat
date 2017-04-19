@@ -18,7 +18,7 @@ model.compile(optimizer=SGD(lr=0.005), loss='binary_crossentropy', metrics=['acc
 # train model
 images = np.load("processed_data/train/images.npy", mmap_mode="r")
 labels = np.load("processed_data/train/labels.npy")
-model.fit(images, labels, batch_size=128, epochs=1, verbose=1, validation_split=0.2)
+model.fit(images, labels, batch_size=64, epochs=1, verbose=1, validation_split=0.2)
 
 # save model
 os.makedirs("model", exist_ok=True)
