@@ -8,7 +8,7 @@ import pickle
 import random
 
 IMAGE_SIZE = 224
-BATCH_SIZE = 5000
+BATCH_SIZE = 1000
 
 
 def load_image(file):
