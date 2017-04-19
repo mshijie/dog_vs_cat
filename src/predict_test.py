@@ -1,20 +1,22 @@
 import numpy as np
 from keras.models import model_from_json
 
-test_features = np.load("test_features.npy", mmap_mode='r+')
+# load data
+images = np.load("processed_data/test/images.npy")
+indexes = np.load("processed_data/test/indexes.npy")
 
-with open("model.json") as f:
+# load model
+with open("model/model.json") as f:
     json = "\n".join(f.readlines())
     model = model_from_json(json)
+model.load_weights("model/model_weights.bin")
 
-model.load_weights("model_weights.bin")
-
-predict = model.predict(test_features, verbose=1)
-
+# predict
+predict = model.predict(images, verbose=1)
 with open("predict.txt", "w") as f:
     f.write("id,label\n")
     for i in range(len(predict)):
-        f.write(str(i+1))
+        f.write(str(indexes[i]))
         f.write(",")
         f.write(str(predict[i][0]))
         f.write("\n")
