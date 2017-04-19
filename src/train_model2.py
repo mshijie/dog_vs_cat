@@ -22,7 +22,7 @@ predictions = Dense(1, activation='sigmoid', name="predictions")(x)
 model = Model(inputs=base_model.input, outputs=predictions)
 model.compile(optimizer='rmsprop', loss='binary_crossentropy')
 
-model.fit(train_images, train_labels, batch_size=128, epochs=30, validation_split=0.2, verbose=1)
+model.fit(train_images, train_labels, batch_size=64, epochs=30, validation_split=0.2, verbose=1)
 
 json = model.to_json()
 with open('model2.json', 'w') as f:
