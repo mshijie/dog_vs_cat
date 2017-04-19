@@ -6,15 +6,15 @@ import skimage.io
 import skimage.transform
 import pickle
 import random
-from keras.applications.vgg19 import VGG19
+from keras.applications.vgg16 import VGG16
 from keras.models import Model
 
 IMAGE_SIZE = 224
 BATCH_SIZE = 1000
 
 
-base_vgg_model = VGG19(weights='imagenet', include_top=True)
-feature_extract_model = Model(inputs=base_vgg_model.input, outputs=base_vgg_model.get_layer('flatten').output)
+base_vgg_model = VGG16(weights='imagenet', include_top=True)
+feature_extract_model = Model(inputs=base_vgg_model.input, outputs=base_vgg_model.get_layer('fc1').output)
 
 
 def load_image(file):
