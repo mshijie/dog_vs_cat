@@ -13,8 +13,8 @@ train_labels = np.memmap("train_labels.npy", dtype="int32", mode='r+', shape=(TR
 base_model = InceptionV3(weights="imagenet", include_top=False)
 
 
-# for layer in base_model.layers:
-#     layer.trainable = False
+for layer in base_model.layers:
+    layer.trainable = False
 
 
 x = base_model.output
@@ -27,7 +27,7 @@ model = Model(inputs=base_model.input, outputs=predictions)
 model.compile(optimizer=SGD(lr=0.001), loss='binary_crossentropy', metrics=['accuracy'])
 
 
-model.fit(train_images, train_labels, batch_size=128, epochs=100, validation_split=0.2, verbose=1)
+model.fit(train_images, train_labels, batch_size=64, epochs=100, validation_split=0.2, verbose=1)
 
 json = model.to_json()
 with open('model2.json', 'w') as f:
