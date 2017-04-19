@@ -9,7 +9,7 @@ from keras.models import Model
 
 IMAGE_SIZE = 224
 FEATURE_SIZE = 7 * 7 * 512
-BATCH_SIZE = 20
+BATCH_SIZE = 100
 
 base_vgg_model = VGG19(weights='imagenet', include_top=True)
 feature_extract_model = Model(inputs=base_vgg_model.input, outputs=base_vgg_model.get_layer('flatten').output)
