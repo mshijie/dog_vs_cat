@@ -11,11 +11,11 @@ train_images = np.memmap("train_images.npy", dtype='float32', mode='r', shape=(T
 train_labels = np.memmap("train_labels.npy", dtype="int32", mode='r+', shape=(TRAIN_SIZE,))
 
 base_model = InceptionV3(weights="imagenet", include_top=False)
-#
-#
-# for layer in base_model.layers:
-#     layer.trainable = False
-#
+
+
+for layer in base_model.layers:
+    layer.trainable = False
+
 
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
