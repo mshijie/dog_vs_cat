@@ -12,8 +12,9 @@ train_labels = np.memmap("train_labels.npy", dtype="int32", mode='r+', shape=(TR
 
 base_model = InceptionV3(weights="imagenet", include_top=False)
 
-for layer in base_model.layers:
-    layer.trainable = False
+
+# for layer in base_model.layers:
+#     layer.trainable = False
 
 
 x = base_model.output
@@ -33,3 +34,5 @@ with open('model2.json', 'w') as f:
     f.write(json)
 
 model.save_weights("model2_weights.bin")
+
+print("model saved")
