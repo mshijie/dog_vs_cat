@@ -43,7 +43,7 @@ def get_batches(files):
 
 
 def pre_process_image(folder, images_file, label_file):
-    files = os.listdir(folder)[0:10]
+    files = os.listdir(folder)
 
     all_images = np.memmap(images_file, dtype='float32', mode='w+', shape=(len(files), IMAGE_SIZE, IMAGE_SIZE, 3))
     if label_file:
