@@ -9,7 +9,7 @@ FEATURE_SIZE = 7 * 7 * 512
 
 input = Input(shape=FEATURE_SIZE, name='input')
 net = Dense(1024, activation='relu', name='dense1')(input)
-net = Dense(1024, activation='relu', name='dense1')(net)
+net = Dense(1024, activation='relu', name='dense2')(net)
 predict = Dense(1, activation='sigmoid', name='predict')(net)
 
 model = Model(input=input, output=predict)
