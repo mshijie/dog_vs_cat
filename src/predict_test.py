@@ -2,7 +2,7 @@ import numpy as np
 from keras.models import model_from_json
 
 # load data
-images = np.load("processed_data/test/images.npy")
+images = np.load("processed_data/test/images.npy", mmap_mode="r")
 indexes = np.load("processed_data/test/indexes.npy")
 
 # load model
