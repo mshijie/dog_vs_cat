@@ -4,9 +4,17 @@ import numpy as np
 import skimage
 import skimage.io
 import skimage.transform
+import pickle
+import random
+from keras.applications.vgg19 import VGG19
+from keras.models import Model
 
 IMAGE_SIZE = 224
-BATCH_SIZE = 100
+BATCH_SIZE = 1000
+
+
+base_vgg_model = VGG19(weights='imagenet', include_top=True)
+feature_extract_model = Model(inputs=base_vgg_model.input, outputs=base_vgg_model.get_layer('flatten').output)
 
 
 def load_image(file):
@@ -24,11 +32,11 @@ def load_image(file):
 def load_all_image(path, files):
     length = len(files)
     images = np.zeros((length, IMAGE_SIZE, IMAGE_SIZE, 3))
-    labels = np.zeros(length)
+    names = []
     for i, file in enumerate(files):
         images[i] = load_image(path + "/" + file)
-        labels[i] = 1 if "dog" in file else 0
-    return images, labels
+        names.append(file.split(".")[0:-1])
+    return images, names
 
 
 def get_batches(files):
@@ -39,29 +47,27 @@ def get_batches(files):
         end = start + BATCH_SIZE
         if end > length:
             end = length
-        yield start, end, files[start: end]
+        yield i, files[start: end]
 
 
-def pre_process_image(folder, images_file, label_file):
-    files = os.listdir(folder)
+def pre_process_image(folder, output_folder):
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder, exist_ok=True)
 
-    all_images = np.memmap(images_file, dtype='float32', mode='w+', shape=(len(files), IMAGE_SIZE, IMAGE_SIZE, 3))
-    if label_file:
-        all_labels = np.memmap(label_file, dtype='int32', mode='w+', shape=(len(files),))
+    all_files = os.listdir(folder)
+    random.shuffle(all_files)
 
-    for start, end, files in get_batches(files):
-        images, labels = load_all_image(folder, files)
-        all_images[start:end] = images
-        if label_file:
-            all_labels[start:end] = labels
-        print("process image", folder, start, end)
+    for i, files in get_batches(all_files):
+        images, names = load_all_image(folder, files)
+        features = feature_extract_model.predict(images)
 
-    all_images.flush()
-    if label_file:
-        all_labels.flush()
+        batch = {"images": images, "names": names, "features": features}
+        with open(output_folder + "/batch_" + str(i), "wb") as f:
+            pickle.dump(batch, f)
+            print("process batch", i)
 
 
 if __name__ == '__main__':
-    pre_process_image('data/train', "train_images.npy", "train_labels.npy")
-    pre_process_image('data/test', "test_image.npy", None)
-    print("data saved")
+    pre_process_image('data/train', "processed_data/train")
+    pre_process_image('data/test', "processed_data/test")
+    print("Done.")
