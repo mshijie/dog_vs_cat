@@ -2,6 +2,7 @@ import numpy as np
 from keras.applications.inception_v3 import InceptionV3
 from keras.layers import Dense,GlobalAveragePooling2D
 from keras.models import Model
+from keras.optimizers import SGD
 
 TRAIN_SIZE = 25000
 IMAGE_SIZE = 224
@@ -22,7 +23,8 @@ x = Dense(1024, activation='relu', name="more_fc2")(x)
 predictions = Dense(1, activation='sigmoid', name="predictions")(x)
 
 model = Model(inputs=base_model.input, outputs=predictions)
-model.compile(optimizer='rmsprop', loss='binary_crossentropy')
+model.compile(optimizer=SGD(lr=0.005), loss='binary_crossentropy', metrics=['accuracy'])
+
 
 model.fit(train_images, train_labels, batch_size=64, epochs=30, validation_split=0.2, verbose=1)
 
