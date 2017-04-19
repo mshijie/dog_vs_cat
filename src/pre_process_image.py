@@ -61,9 +61,9 @@ def pre_process_image(folder, output_folder):
         images, names = load_all_image(folder, files)
         features = feature_extract_model.predict(images)
 
-        batch = {"images": images, "names": names, "features": features}
+        batch_data = {"images": images, "names": names, "features": features}
         with open(output_folder + "/batch_" + str(i), "wb") as f:
-            pickle.dump(batch, f)
+            pickle.dump(batch_data, f)
             print("process batch", i)
 
 
