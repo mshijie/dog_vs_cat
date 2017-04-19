@@ -24,7 +24,7 @@ x = Dense(1024, activation='relu', name="more_fc2")(x)
 predictions = Dense(1, activation='sigmoid', name="predictions")(x)
 
 model = Model(inputs=base_model.input, outputs=predictions)
-model.compile(optimizer=SGD(lr=0.005), loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=SGD(lr=0.001), loss='binary_crossentropy', metrics=['accuracy'])
 
 
 model.fit(train_images, train_labels, batch_size=128, epochs=100, validation_split=0.2, verbose=1)
