@@ -64,7 +64,7 @@ def pre_process_image(folder, output_folder):
         batch_data = {"images": images, "names": names, "features": features}
         with open(output_folder + "/batch_" + str(i), "wb") as f:
             pickle.dump(batch_data, f)
-            print("process batch", i)
+            print("process batch", folder, i)
 
 
 if __name__ == '__main__':
