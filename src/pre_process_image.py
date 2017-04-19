@@ -12,7 +12,6 @@ from keras.models import Model
 IMAGE_SIZE = 224
 BATCH_SIZE = 1000
 
-
 base_vgg_model = VGG16(weights='imagenet', include_top=True)
 feature_extract_model = Model(inputs=base_vgg_model.input, outputs=base_vgg_model.get_layer('fc1').output)
 
@@ -59,12 +58,15 @@ def pre_process_image(folder, output_folder):
 
     for i, files in get_batches(all_files):
         images, names = load_all_image(folder, files)
+        print("load image", folder, i)
+
         features = feature_extract_model.predict(images)
+        print("extract features", folder, i)
 
         batch_data = {"images": images, "names": names, "features": features}
         with open(output_folder + "/batch_" + str(i), "wb") as f:
             pickle.dump(batch_data, f)
-            print("process batch", i)
+        print("save batch", folder, i)
 
 
 if __name__ == '__main__':
