@@ -4,11 +4,9 @@ import numpy as np
 import skimage
 import skimage.io
 import skimage.transform
-import pickle
 import random
 
 IMAGE_SIZE = 224
-BATCH_SIZE = 1000
 
 
 def load_image(file):
@@ -23,45 +21,39 @@ def load_image(file):
     return resize_img.astype(np.float32)
 
 
-def load_all_image(path, files):
-    length = len(files)
-    images = np.zeros((length, IMAGE_SIZE, IMAGE_SIZE, 3))
-    names = []
-    for i, file in enumerate(files):
-        images[i] = load_image(path + "/" + file)
-        names.append(file.split(".")[0:-1])
-    return images, names
-
-
-def get_batches(files):
-    length = len(files)
-    total_batch = (length + BATCH_SIZE - 1) // BATCH_SIZE
-    for i in range(total_batch):
-        start = i * BATCH_SIZE
-        end = start + BATCH_SIZE
-        if end > length:
-            end = length
-        yield i, files[start: end]
-
-
-def pre_process_image(folder, output_folder):
+def pre_process_image(folder, output_folder, has_label=True):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder, exist_ok=True)
 
-    all_files = os.listdir(folder)
-    random.shuffle(all_files)
+    files = os.listdir(folder)
+    random.shuffle(files)
 
-    for i, files in get_batches(all_files):
-        print("start batch", folder, i)
-        images, names = load_all_image(folder, files)
+    length = len(files)
+    images = np.zeros((length, IMAGE_SIZE, IMAGE_SIZE, 3), dtype=np.float32)
+    if has_label:
+        labels = np.zeros(length, dtype=np.int32)
+    indexes = np.zeros(length, dtype=np.int32)
 
-        batch_data = {"images": images, "names": names}
-        with open(output_folder + "/batch_" + str(i), "wb") as f:
-            pickle.dump(batch_data, f)
-        print("end batch", folder, i)
+    for i in range(length):
+        file = files[i]
+        images[i] = load_image(folder + "/" + file)
+        s = file.split(".")
+        if has_label:
+            labels[i] = 1 if s[0] == 'dog' else 0
+            indexes[i] = int(s[1])
+        else:
+            indexes[i] = int(s[0])
+
+        if i % 100 == 0:
+            print("process", folder, i)
+
+    np.save(output_folder + "/images", images)
+    if has_label:
+        np.save(output_folder + "/labels", labels)
+    np.save(output_folder + "/indexes", indexes)
 
 
 if __name__ == '__main__':
     pre_process_image('data/train', "processed_data/train")
-    pre_process_image('data/test', "processed_data/test")
+    pre_process_image('data/test', "processed_data/test", has_label=False)
     print("Done.")

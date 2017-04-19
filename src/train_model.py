@@ -4,15 +4,16 @@ import pickle
 from keras.layers import *
 from keras.models import Model
 from keras.optimizers import SGD
+from keras.applications.inception_v3 import InceptionV3
+from keras.layers import Dense, GlobalAveragePooling2D
 
-FEATURE_SIZE = 7 * 7 * 512
 
 # create model
-inputs = Input(shape=(FEATURE_SIZE,), name='inputs')
-net = Dense(1024, activation='relu', name='dense1')(inputs)
-net = Dense(1024, activation='relu', name='dense2')(net)
-predict = Dense(1, activation='sigmoid', name='predict')(net)
-model = Model(inputs=inputs, outputs=predict)
+base_model = InceptionV3(weights=None, include_top=False)
+x = base_model.output
+x = GlobalAveragePooling2D(name='avg_pool')(x)
+predictions = Dense(1, activation='sigmoid', name="predictions")(x)
+model = Model(inputs=base_model.input, outputs=predictions)
 model.compile(optimizer=SGD(lr=0.005), loss='binary_crossentropy', metrics=['accuracy'])
 
 
@@ -41,6 +42,6 @@ model.fit_generator(read_batch(data_dir, train_files),
 # save model
 os.makedirs("model", exist_ok=True)
 json = model.to_json()
-with open('model/model1.json', 'w') as f:
+with open('model/model.json', 'w') as f:
     f.write(json)
-model.save_weights("model/model1_weights.bin")
+model.save_weights("model/model_weights.bin")
