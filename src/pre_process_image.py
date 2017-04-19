@@ -42,25 +42,26 @@ def get_batches(files):
         yield start, end, files[start: end]
 
 
-def pre_process_image(folder):
-    files = os.listdir(folder)
+def pre_process_image(folder, images_file, label_file):
+    files = os.listdir(folder)[0:10]
 
-    all_images = np.zeros((len(files), IMAGE_SIZE, IMAGE_SIZE, 3))
-    all_labels = np.zeros(len(files))
+    all_images = np.memmap(images_file, dtype='float32', mode='w+', shape=(len(files), IMAGE_SIZE, IMAGE_SIZE, 3))
+    if label_file:
+        all_labels = np.memmap(label_file, dtype='int32', mode='w+', shape=(len(files),))
 
     for start, end, files in get_batches(files):
         images, labels = load_all_image(folder, files)
         all_images[start:end] = images
-        all_labels[start:end] = labels
+        if label_file:
+            all_labels[start:end] = labels
         print("process image", folder, start, end)
 
-    return all_images, all_labels
+    all_images.flush()
+    if label_file:
+        all_labels.flush()
 
 
 if __name__ == '__main__':
-    train_images, train_labels = pre_process_image('data/train')
-    test_image, _ = pre_process_image('data/test')
-    np.save("train_images.npy", train_images)
-    np.save("train_labels.npy", train_labels)
-    np.save("test_image.npy", test_image)
+    pre_process_image('data/train', "train_images.npy", "train_labels.npy")
+    pre_process_image('data/test', "test_image.npy", None)
     print("data saved")
