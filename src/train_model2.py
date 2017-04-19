@@ -27,7 +27,7 @@ model = Model(inputs=base_model.input, outputs=predictions)
 model.compile(optimizer=SGD(lr=0.001), loss='binary_crossentropy', metrics=['accuracy'])
 
 
-model.fit(train_images, train_labels, batch_size=64, epochs=100, validation_split=0.2, verbose=1)
+model.fit(train_images, train_labels, batch_size=32, epochs=100, validation_split=0.2, verbose=1)
 
 json = model.to_json()
 with open('model2.json', 'w') as f:
