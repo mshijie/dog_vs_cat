@@ -7,7 +7,7 @@ train_labels = np.load("train_labels.npy", mmap_mode='r+')
 
 FEATURE_SIZE = 7 * 7 * 512
 
-input = Input(shape=FEATURE_SIZE, name='input')
+input = Input(shape=(FEATURE_SIZE), name='input')
 net = Dense(1024, activation='relu', name='dense1')(input)
 net = Dense(1024, activation='relu', name='dense2')(net)
 predict = Dense(1, activation='sigmoid', name='predict')(net)
