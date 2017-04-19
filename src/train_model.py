@@ -16,3 +16,9 @@ model = Model(input=input, output=predict)
 model.compile(optimizer=SGD(lr=0.01), loss='binary_crossentropy', metrics=['accuracy'])
 
 model.fit(train_features, train_labels, batch_size=128, nb_epoch=30, validation_split=0.2, verbose=1)
+
+json = model.to_json()
+with open('model.json', 'w') as f:
+    f.write(json)
+
+model.save_weights("model_weights.bin")

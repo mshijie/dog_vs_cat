@@ -65,8 +65,8 @@ def extract_features(folder, max_size=-1):
 
 
 if __name__ == '__main__':
-    train_features, train_labels = extract_features('data/train', max_size=1000)
-    test_features, _ = extract_features('data/test', max_size=1000)
+    train_features, train_labels = extract_features('data/train')
+    test_features, _ = extract_features('data/test')
     np.save("train_features.npy", train_features)
     np.save("train_labels.npy", train_labels)
     np.save("test_features.npy", test_features)
