@@ -20,7 +20,8 @@ labels = np.load("processed_data/train/labels.npy")
 model.fit(images, labels, batch_size=32, epochs=10, verbose=1, validation_split=0.2)
 
 # save model
-os.makedirs("model", exist_ok=True)
+if not os.path.exists("model"):
+    os.makedirs("model")
 json = model.to_json()
 with open('model/model.json', 'w') as f:
     f.write(json)
